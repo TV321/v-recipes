@@ -26,6 +26,11 @@
           </div>
       </v-list-item-content>
     </v-list-item>
+    <v-card-actions>
+        <!-- <router-link > -->
+            <v-btn :to="{ name: 'EditRecipe', params: {recipe_slug: recipe.slug}}" text>Edit</v-btn>
+        <!-- </router-link> -->
+    </v-card-actions>
 
   </v-card>
   </div>

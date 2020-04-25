@@ -21,6 +21,8 @@
                 v-for="(ing, index) in ingredients" :key="index"
                 v-model="ingredients[index]"
                 label="Ingredient"
+                :append-icon="'mdi-delete'"
+                @click:append="removeIng(ing)"
   
             ></v-text-field>
 
@@ -90,6 +92,9 @@ export default {
             } else {
                 this.warningMsg = 'Enter a value to add an ingredient'
             }
+        },
+        removeIng(ing) {
+            this.ingredients = this.ingredients.filter(ingredient => ingredient !== ing)
         }
     }
 }
