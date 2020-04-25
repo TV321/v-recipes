@@ -12,6 +12,8 @@
 
 <script>
 import Card from './Card'
+import db from '@/firebase/init'
+
 export default {
   name: 'Index',
   components: {
@@ -19,18 +21,23 @@ export default {
   },
   data() {
     return {
-      recipes: [
-        { title: 'Cherry Cheesecake', slug: 'cherry-cheesecake', ingredients: ['cream cheese', 'cherry pie filling', 'lemon juice'], id: 1},
-        { title: 'Apple Pie', slug: 'apple-pie', ingredients: ['pastry', 'butter', 'flour', 'brown sugar', 'apples'], id: 2},
-        { title: 'Apple Pie', slug: 'apple-pie', ingredients: ['pastry', 'butter', 'flour', 'brown sugar', 'apples'], id: 3},
-        { title: 'Apple Pie', slug: 'apple-pie', ingredients: ['pastry', 'butter', 'flour', 'brown sugar', 'apples'], id: 4}
-      ]
+      recipes: []
     }
   },
   methods: {
     deleteRec(payload) {
       this.recipes = this.recipes.filter(rec => rec.id !== payload.id)
     }
+  },
+  created() {
+    db.collection('recipes').get()
+      .then(snapshot => {
+        snapshot.docs.forEach(doc => {
+          let recipe = doc.data()
+          recipe.id = doc.id
+          this.recipes.push(recipe)
+        })
+      })
   }
 
 }
