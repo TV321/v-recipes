@@ -26,7 +26,11 @@ export default {
   },
   methods: {
     deleteRec(payload) {
-      this.recipes = this.recipes.filter(rec => rec.id !== payload.id)
+      db.collection('recipes').doc(payload.id).delete()
+        .then(() => {
+          this.recipes = this.recipes.filter(rec => rec.id !== payload.id)
+        })
+      
     }
   },
   created() {
