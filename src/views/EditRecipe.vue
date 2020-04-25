@@ -53,6 +53,8 @@
 
 <script>
 import db from '@/firebase/init'
+import slugify from 'slugify'
+
 export default {
     name: 'EditRecipe',
     props: ['recipe_slug'],
@@ -68,8 +70,6 @@ export default {
             .get().then(resp => {
                 this.recipeInfo = resp.docs[0].data()
                 this.recipeInfo.id = resp.docs[0].id
-                console.log(this.recipeInfo)
-                console.log(this.recipeInfo.id)
             })
     },
     methods: {
@@ -84,6 +84,26 @@ export default {
             } else {
                 this.warningMsg = 'Enter a value to add an ingredient'
             }
+        },
+        onEdit() {
+            if(this.recipeInfo.title) {
+                this.warningMsg = ''
+                this.recipeInfo.slug = slugify(this.recipeInfo.title, {
+                    replacement: '-',
+                    lower: true,
+                    remove: /[*+~.()'"!:@]/g
+                })
+                db.collection('recipes').doc(this.recipeInfo.id).update({
+                    title: this.recipeInfo.title,
+                    ingredients: this.recipeInfo.ingredients,
+                    slug: this.recipeInfo.slug
+                }).then(() => {
+                    this.$router.push({ name: 'Home'})
+                }).catch(err => console.log(err))
+            } else {
+                this.warningMsg = 'Enter a name of recipe'
+            }
+            console.log(this.name, this.ingredients)
         }
     }
 }
